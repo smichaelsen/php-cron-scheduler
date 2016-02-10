@@ -213,7 +213,9 @@ abstract class Job
     {
         if ($this->lastExecutionFile && is_readable($this->lastExecutionFile)) {
             $lastExecution = file_get_contents($this->lastExecutionFile);
-            $lastRunDate = $this->execution->getPreviousRunDate();
+            $lastRunDate = $this->execution->getPreviousRunDate('now', 0, true);
+            $nextRunDate = $this->execution->getNextRunDate();
+            echo (is_string($this->command) ? $this->command : '[function]') . ': ' . $lastExecution . ' | ' . $lastRunDate->getTimestamp(). ' | ' . $nextRunDate->getTimestamp() . "\n";
             return $lastRunDate->getTimestamp() > $lastExecution && $this->truthTest === true;
         }
         return $this->execution->isDue() && $this->truthTest === true;
